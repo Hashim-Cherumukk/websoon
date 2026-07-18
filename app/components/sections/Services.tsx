@@ -1,136 +1,136 @@
 "use client";
 
+import { useRef } from "react";
 import { motion } from "framer-motion";
-import {
-  Globe,
-  Smartphone,
-  PenTool,
-} from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
 
 import Container from "../ui/Container";
+import AnimatedTitle from "../ui/AnimatedTitle";
+
+import WaveDivider from "../illustrations/WaveDivider";
+import BackgroundDecor from "../illustrations/BackgroundDecor";
+
+import WebAppSvg from "../illustrations/WebAppSvg";
+import WebsiteSvg from "../illustrations/WebsiteSvg";
+import UiUxSvg from "../illustrations/UiUxSvg";
+import EcommerceSvg from "../illustrations/EcommerceSvg";
+import PerformanceSvg from "../illustrations/PerformanceSvg";
+import StrategySvg from "../illustrations/StrategySvg";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const services = [
   {
-    icon: Globe,
-    title: "Web Development",
-    description:
-      "Modern websites built for performance, SEO and lasting first impressions.",
-    active: true,
-  },
-  {
-    icon: Smartphone,
     title: "Web Applications",
     description:
-      "Custom business software, dashboards and portals that scale with you.",
+      "Scalable SaaS platforms, dashboards and business systems engineered for long-term growth.",
+    svg: WebAppSvg,
   },
   {
-    icon: PenTool,
+    title: "Custom Websites",
+    description:
+      "Modern marketing websites that combine performance, accessibility and memorable design.",
+    svg: WebsiteSvg,
+  },
+  {
     title: "UI / UX Design",
     description:
-      "Simple, intuitive interfaces designed around real people and real goals.",
+      "Interfaces carefully designed around clarity, usability and delightful interactions.",
+    svg: UiUxSvg,
+  },
+  {
+    title: "E-Commerce",
+    description:
+      "Fast online stores with secure checkout experiences and conversion-focused architecture.",
+    svg: EcommerceSvg,
+  },
+  {
+    title: "Performance",
+    description:
+      "Optimized loading, Core Web Vitals improvements and efficient front-end engineering.",
+    svg: PerformanceSvg,
+  },
+  {
+    title: "Technical Strategy",
+    description:
+      "Architecture planning, scalable systems and technical consulting for growing businesses.",
+    svg: StrategySvg,
   },
 ];
 
 export default function Services() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+
   return (
-    <section
-      id="services"
-      className="bg-[#F8FAFC] py-28"
-    >
-      <Container>
+    <>
+      <WaveDivider className="text-[#EEF3FA]" />
 
-        {/* Heading */}
+      <section
+        id="services"
+        ref={sectionRef}
+        className="relative overflow-hidden bg-[#EEF3FA] pb-24 pt-12 lg:pb-28 lg:pt-16 text-slate-900"
+      >
+        <BackgroundDecor />
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: .6 }}
-          className="mx-auto max-w-2xl text-center"
-        >
+        <Container className="relative z-10">
 
-          <span className="text-sm font-semibold uppercase tracking-[0.25em] text-blue-600">
-            Services
-          </span>
+          <div className="mb-14 text-center">
 
-          <h2 className="mt-5 text-4xl font-semibold tracking-[-0.03em] text-slate-900">
-            What we build.
-          </h2>
+            <AnimatedTitle text="Services" variant="light" />
 
-          <p className="mt-5 text-lg leading-8 text-slate-600">
-            Digital products designed to help businesses grow with confidence.
-          </p>
+          </div>
 
-        </motion.div>
+          <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
 
-        {/* Services */}
+            {services.map((service, index) => {
+              const Svg = service.svg;
 
-        <div className="mt-20 grid gap-8 md:grid-cols-3">
+              return (
+                <motion.article
+                  key={index}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-10%" }}
+                  transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
+                  className="
+                    service-card
+                    relative
+                    overflow-hidden
+                    rounded-[30px]
+                    border
+                    border-white/10
+                    bg-brand-dark
+                    p-8
+                    shadow-[0_10px_30px_rgba(10,15,28,0.15)]
+                    hover:shadow-[0_15px_40px_rgba(10,15,28,0.25)]
+                    transition-all
+                    duration-300
+                  "
+                >
+                  <div className="relative z-10">
 
-                  {services.map((service, index) => {
-          const Icon = service.icon;
+                    <Svg active />
 
-          return (
-            <motion.div
-              key={service.title}
-              initial={{ opacity: 0, y: 25 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{
-                duration: 0.5,
-                delay: index * 0.12,
-              }}
-              className={`
-                relative rounded-[26px]
-                border
-                bg-white
-                px-8
-                py-10
-                text-center
-                transition-all
-                duration-300
-                hover:-translate-y-2
-                hover:shadow-xl
-                ${
-                  service.active
-                    ? "border-blue-200 shadow-lg"
-                    : "border-slate-200 shadow-sm"
-                }
-              `}
-            >
-              {/* Top Accent */}
+                    <h3 className="mt-8 text-2xl font-semibold tracking-tight text-white">
+                      {service.title}
+                    </h3>
 
-              {service.active && (
-                <div className="absolute left-1/2 top-0 h-1 w-14 -translate-x-1/2 rounded-full bg-blue-600" />
-              )}
+                    <p className="mt-4 leading-7 text-slate-400">
+                      {service.description}
+                    </p>
 
-              {/* Icon */}
+                  </div>
 
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50">
-                <Icon
-                  size={30}
-                  strokeWidth={1.8}
-                  className="text-blue-600"
-                />
-              </div>
+                </motion.article>
+              );
+            })}
 
-              {/* Title */}
+          </div>
 
-              <h3 className="mt-8 text-xl font-semibold text-slate-900">
-                {service.title}
-              </h3>
-
-              {/* Description */}
-
-              <p className="mt-4 text-[15px] leading-7 text-slate-600">
-                {service.description}
-              </p>
-            </motion.div>
-          );
-        })}
-      </div>
-
-    </Container>
-  </section>
-);
+        </Container>
+      </section>
+    </>
+  );
 }

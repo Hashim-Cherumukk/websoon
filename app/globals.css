@@ -1,52 +1,148 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #111827;
+@theme {
+  /* Injecting our Google Fonts into Tailwind */
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-syne), ui-sans-serif, system-ui, sans-serif;
 
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-
-  --muted: #6b7280;
-  --border: #e5e7eb;
-
-  --section: #f8fafc;
+  /* Custom Color Palette from Logo */
+  --color-brand-dark: #0a0f1c; /* The dark "Web" color */
+  --color-brand-gray: #475569; /* For subtitles */
+  --color-brand-light: #f8f9fc; /* Soft section background */
+  
+  --color-brand-cyan: #2bc0ff;
+  --color-brand-blue: #2d5cf6;
+  --color-brand-purple: #5b30fa;
 }
 
+:root {
+  --background: #ffffff;
+  --foreground: #0a0f1c;
+}
+
+/* Base Reset & Lenis Setup */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+/* Crucial: Disable native smooth scrolling when using Lenis */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto !important; 
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-::selection {
-  background: var(--primary);
-  color: white;
+/* Hide native scrollbar for a cleaner canvas look */
+::-webkit-scrollbar {
+  display: none;
+}
+* {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-button,
-a {
-  transition: all .25s ease;
+/* Typography Utility Classes */
+h1, h2, h3, h4, h5, h6, .heading {
+  font-family: var(--font-heading);
 }
 
+/* Custom Gradients derived from logo */
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-brand-cyan) 0%, var(--color-brand-blue) 45%, var(--color-brand-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.bg-gradient-brand {
+  background: linear-gradient(135deg, var(--color-brand-cyan) 0%, var(--color-brand-blue) 45%, var(--color-brand-purple) 100%);
+}
+
+/* Standardized Section Spacing */
 .section {
-  padding-block: 7rem;
+  padding-block: 8rem; /* Larger padding for high-end feel */
 }
 
-.section-title {
-  @apply text-4xl md:text-5xl font-bold tracking-tight;
+/* Layout Utilities */
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.section-description {
-  @apply mt-5 text-lg text-gray-500 leading-8;
+/* Infinite Marquee Animation */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+  will-change: transform;
+}
+
+/* Pause the marquee when the user hovers over it (optional tactile detail) */
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Premium Hollow Stroke Typography */
+.text-stroke {
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.15);
+  color: transparent;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.text-stroke-hover:hover .text-stroke {
+  color: #ffffff;
+  -webkit-text-stroke: 1.5px #ffffff;
+  transform: translateX(20px); /* Slight premium nudge on hover */
+}
+
+/* ─── Process Section — Card Activation ─────────────────────────────────── */
+
+/* Icon colour: slate-400 by default, brand-cyan when active */
+.process-card .process-icon {
+  color: #94a3b8;
+  transition: color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.process-card.is-active .process-icon {
+  color: #2bc0ff;
+}
+
+/* Top-edge accent bar that sweeps in when a card becomes active */
+.process-card::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: 0;
+  height: 2px;
+  background: #2bc0ff;
+  border-radius: 0 0 2px 2px;
+  transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.process-card.is-active::before {
+  width: 100%;
+}
+
+/* Mobile progress dots */
+.process-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: #cbd5e1;
+  transition: background 0.3s ease, width 0.3s ease;
+}
+.process-dot.is-active {
+  width: 20px;
+  background: #2bc0ff;
 }

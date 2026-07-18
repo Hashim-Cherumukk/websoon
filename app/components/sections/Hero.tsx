@@ -1,135 +1,119 @@
 "use client";
 
-import Image from "next/image";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { useRef } from "react";
+import { ArrowRight } from "lucide-react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 import Container from "../ui/Container";
 import Button from "../ui/Button";
 
 export default function Hero() {
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
+
+    tl.from(".reveal-text", {
+      y: "100%",
+      opacity: 0,
+      duration: 1.4,
+      ease: "power4.out",
+      stagger: 0.18,
+      delay: 0.15,
+    })
+    .from(".reveal-sub", {
+      y: 15,
+      opacity: 0,
+      duration: 0.8,
+    }, "-=0.8")
+    .from(".reveal-btn", {
+      scale: 0.95,
+      opacity: 0,
+      duration: 0.6,
+      stagger: 0.08,
+    }, "-=0.6");
+
+    // Mouse parallax for the floating depth shapes
+    const shapes = document.querySelectorAll(".floating-shape");
+    const handleMouseMove = (e: MouseEvent) => {
+      const { clientX, clientY } = e;
+      const xPos = (clientX / window.innerWidth - 0.5) * 30;
+      const yPos = (clientY / window.innerHeight - 0.5) * 30;
+
+      gsap.to(shapes, {
+        x: xPos,
+        y: yPos,
+        duration: 1.5,
+        ease: "power2.out",
+      });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+
+  }, { scope: heroRef });
+
   return (
     <section
       id="home"
-      className="relative flex min-h-[calc(100vh-70px)] items-center overflow-hidden bg-white pt-20 pb-16 lg:min-h-screen lg:pt-24 lg:pb-20"
+      ref={heroRef}
+      className="relative flex h-[68vh] min-h-[550px] items-center justify-center overflow-hidden bg-white pt-20"
     >
-      {/* Background */}
-
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute right-0 top-20 h-[500px] w-[500px] rounded-full bg-blue-100/40 blur-3xl" />
-
-        <div
-          className="absolute right-20 top-16 h-[500px] w-[500px] opacity-[0.05]"
-          style={{
-            backgroundImage:
-              "radial-gradient(#2563EB 1px, transparent 1px)",
-            backgroundSize: "18px 18px",
-          }}
-        />
+      {/* Dynamic Back-Layers */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="floating-shape absolute -right-[5%] top-[5%] h-[450px] w-[450px] rounded-full bg-brand-cyan/15 blur-[90px]" />
+        <div className="floating-shape absolute -left-[5%] top-[15%] h-[400px] w-[400px] rounded-full bg-brand-blue/10 blur-[100px]" />
+        
+        {/* Abstract structural grid line instead of noisy AI dots */}
+        <div className="absolute left-1/4 top-0 h-full w-px bg-slate-100/60" />
+        <div className="absolute left-3/4 top-0 h-full w-px bg-slate-100/60" />
       </div>
 
-      <Container className="w-full">
-        <div className="grid items-center gap-10 lg:grid-cols-[48%_52%]">
-
-          {/* LEFT */}
-
-          <div className="max-w-[580px] lg:translate-y-6">
-
-            <h1 className="text-3xl font-semibold leading-[1.15] tracking-[-0.03em] text-gray-900 sm:text-4xl lg:text-[46px]">
-              We build the website 
-              <br />
-              your business deserves.
-            </h1>
-
-            <p className="mt-5 text-sm leading-relaxed text-gray-500 sm:text-base">
-              Whether you're starting from scratch or replacing an outdated website, we design and build modern digital experiences that help your business make a lasting first impression.
-            </p>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button href="#contact">
-                Let's Talk
-              </Button>
-
-              <Button
-                href="#services"
-                variant="secondary"
-                className="group"
-              >
-                Our Services
-
-                <ArrowRight
-                  className="ml-2 transition-transform duration-200 group-hover:translate-x-1"
-                  size={18}
-                />
-              </Button>
-            </div>
-
-            <div className="mt-8 flex flex-wrap gap-5 text-xs text-gray-400">
-              <div className="flex items-center gap-2">
-                <CheckCircle2
-                  size={16}
-                  className="text-blue-600"
-                />
-                Responsive
-              </div>
-
-              <div className="flex items-center gap-2">
-                <CheckCircle2
-                  size={16}
-                  className="text-blue-600"
-                />
-                SEO Ready
-              </div>
-
-              <div className="flex items-center gap-2">
-                <CheckCircle2
-                  size={16}
-                  className="text-blue-600"
-                />
-                Fast Delivery
-              </div>
-            </div>
-
+      <Container className="relative z-10 w-full flex flex-col items-center text-center">
+        
+        {/* Crisp Bold Typography */}
+        <h1 className="heading max-w-[950px] text-[36px] font-bold leading-[1.15] tracking-[-0.03em] text-brand-dark sm:text-5xl md:text-6xl lg:text-[70px]">
+          <div className="overflow-hidden pb-1">
+            <div className="reveal-text inline-block w-full">We build the website</div>
           </div>
+          <div className="overflow-hidden pb-1">
+            <div className="reveal-text inline-block w-full">
+              your business <span className="text-gradient">deserves.</span>
+            </div>
+          </div>
+        </h1>
 
-          {/* RIGHT */}
+        {/* Dense Subtitle */}
+        <p className="reveal-sub mx-auto mt-6 max-w-[580px] text-sm leading-relaxed text-brand-gray sm:text-base">
+          Whether you're starting from scratch or replacing an outdated website, we design and build modern digital experiences that help your business make a lasting first impression.
+        </p>
 
-          <div className="relative flex justify-center lg:justify-start">
-            <div className="relative w-full max-w-[620px]">
-
-              {/* Soft shadow behind illustration */}
-
-              <div className="absolute inset-8 rounded-full bg-blue-100/30 blur-3xl" />
-
-              <Image
-                src="/hero-illustration.png"
-                alt="WebSoon Illustration"
-                width={680}
-                height={680}
-                priority
-                className="relative z-10 h-auto w-full object-contain select-none"
+        {/* Minimal Actions */}
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+          <div className="reveal-btn">
+            <Button href="#contact" size="md">
+              Let's Talk
+            </Button>
+          </div>
+          
+          <div className="reveal-btn">
+            <Button
+              href="#services"
+              variant="secondary"
+              size="md"
+              className="group"
+            >
+              Our Services
+              <ArrowRight
+                className="ml-2 transition-transform duration-300 group-hover:translate-x-1"
+                size={16}
               />
-
-            </div>
+            </Button>
           </div>
-
         </div>
+
       </Container>
-
-      {/* Bottom Divider */}
-
-      <div className="pointer-events-none absolute bottom-0 left-0 w-full overflow-hidden leading-none">
-        <svg
-          viewBox="0 0 1440 120"
-          className="block h-10 w-full lg:h-14"
-          preserveAspectRatio="none"
-        >
-          <path
-            fill="#F8FAFC"
-            d="M0,64 C220,120 520,0 720,32 C960,70 1180,120 1440,60 L1440,120 L0,120 Z"
-          />
-        </svg>
-      </div>
-
     </section>
   );
 }

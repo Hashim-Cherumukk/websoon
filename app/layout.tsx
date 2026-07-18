@@ -1,18 +1,26 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Syne, Manrope } from "next/font/google";
 import "./globals.css";
+import SmoothScroller from "./components/layout/SmoothScroller";
 
-// Load Inter via next/font — self-hosted, no external <link> needed
-const inter = Inter({
+// For large, bold, agency-style headings
+const syne = Syne({
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-syne",
 });
 
-// SEO metadata, picked up by Next.js for <head>
+// For clean, readable body text
+const manrope = Manrope({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-manrope",
+});
+
 export const metadata: Metadata = {
-  title: "WebSoon | Web & App Solutions",
+  title: "WebSoon | Digital Agency",
   description:
-    "WebSoon designs and builds fast, modern websites and web apps that help businesses grow — from strategy and UI design to full-stack engineering.",
+    "We design and build modern digital experiences that help your business make a lasting first impression.",
 };
 
 export default function RootLayout({
@@ -21,8 +29,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} antialiased`}>{children}</body>
+    <html lang="en" className={`${syne.variable} ${manrope.variable}`}>
+      <body className="font-sans antialiased text-brand-dark bg-white selection:bg-brand-blue selection:text-white">
+        <SmoothScroller>
+          {children}
+        </SmoothScroller>
+      </body>
     </html>
   );
 }
